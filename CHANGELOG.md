@@ -1,3 +1,10 @@
+1.2.4
+=====
+
+* (improvement) Add `TorrStyle::done()`.
+* (improvement) Bump dependencies.
+
+
 1.2.3
 =====
 

@@ -25,9 +25,9 @@ class TorrStyle extends SymfonyStyle
 		$length = Helper::width(Helper::removeDecoration($this->getFormatter(), $message)) + 4;
 
 		$this->newLine();
-		$this->writeln(sprintf(' <fg=%s>╭%s╮</>', self::HIGHLIGHT, str_repeat("─", $length)));
-		$this->writeln(sprintf(' <fg=%s>│</>  %s  <fg=red>│</>', self::HIGHLIGHT, $message));
-		$this->writeln(sprintf(' <fg=%s>╰%s╯</>', self::HIGHLIGHT, str_repeat("─", $length)));
+		$this->writeln(\sprintf(' <fg=%s>╭%s╮</>', self::HIGHLIGHT, str_repeat("─", $length)));
+		$this->writeln(\sprintf(' <fg=%s>│</>  %s  <fg=red>│</>', self::HIGHLIGHT, $message));
+		$this->writeln(\sprintf(' <fg=%s>╰%s╯</>', self::HIGHLIGHT, str_repeat("─", $length)));
 		$this->newLine();
 	}
 
@@ -41,7 +41,7 @@ class TorrStyle extends SymfonyStyle
 		$this->newLine();
 		$this->writeln([
 			$message,
-			sprintf('<fg=%s>%s</>', self::HIGHLIGHT, str_repeat("─", $length)),
+			\sprintf('<fg=%s>%s</>', self::HIGHLIGHT, str_repeat("─", $length)),
 		]);
 		$this->newLine();
 	}
@@ -78,7 +78,7 @@ class TorrStyle extends SymfonyStyle
 	{
 		$this->newLine();
 		$elements = array_map(
-			static fn ($element) => sprintf('  <fg=%s>●</> %s', self::HIGHLIGHT, $element),
+			static fn ($element) => \sprintf('  <fg=%s>●</> %s', self::HIGHLIGHT, $element),
 			$elements,
 		);
 
@@ -98,5 +98,16 @@ class TorrStyle extends SymfonyStyle
 		$progressBar->setFormat($format);
 
 		return $progressBar;
+	}
+
+	/**
+	 * A smaller way to mark something as done
+	 */
+	public function done (string $message) : void
+	{
+		$this->write(\sprintf(
+			"<fg=green>✓</> %s",
+			$message,
+		));
 	}
 }
