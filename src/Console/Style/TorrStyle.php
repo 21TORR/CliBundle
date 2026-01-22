@@ -99,4 +99,15 @@ class TorrStyle extends SymfonyStyle
 
 		return $progressBar;
 	}
+
+	/**
+	 * A smaller way to mark something as done
+	 */
+	public function done (string $message) : void
+	{
+		$this->write(\sprintf(
+			"<fg=green>✓</> %s",
+			$message,
+		));
+	}
 }

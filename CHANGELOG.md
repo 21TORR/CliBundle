@@ -1,3 +1,9 @@
+1.2.4
+=====
+
+* (improvement) Add `TorrStyle::done()`.
+
+
 1.2.3
 =====
 
