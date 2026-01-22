@@ -1,19 +1,42 @@
-includes:
-	- vendor/21torr/janus/phpstan/lib.neon
-
 parameters:
+	level: 9
 
-# If you use simple-phpunit, you need to uncomment the following line.
-# Always make sure to first run simple-phpunit and then PHPStan.
-#	bootstrapFiles:
-#		- vendor/bin/.phpunit/phpunit/vendor/autoload.php
+	editorUrl: 'phpstorm://open?file=%%file%%&line=%%line%%'
 
-# These are temporarily copied here, as normally they should be in the lib.neon of janus.
-# However, due to a bug in PHPStan, this currently doesn't work (https://github.com/phpstan/phpstan/issues/12844)
+	checkDynamicProperties: true
+	checkExplicitMixedMissingReturn: true
+	checkUninitializedProperties: true
+	inferPrivatePropertyTypeFromConstructor: true
+	polluteScopeWithLoopInitialAssignments: false
+	reportPossiblyNonexistentConstantArrayOffset: true
+	reportUnmatchedIgnoredErrors: false
+	treatPhpDocTypesAsCertain: false
+
+	# Disable these settings here, as they currently crash in PHPStan v2
 	excludePaths:
-		analyse:
-			- vendor
-		analyseAndScan:
-			- node_modules (?)
-			- var (?)
-			- vendor-bin
+			analyse:
+				- vendor
+			analyseAndScan:
+				- node_modules (?)
+				- var (?)
+				- vendor-bin
+
+	ignoreErrors:
+		- message: "#^Attribute class JetBrains\\\\PhpStorm\\\\.*? does not exist\\.$#"
+		- identifier: missingType.iterableValue
+		-
+			identifier: argument.type
+			path: %currentWorkingDirectory%/tests/*
+		-
+			identifier: staticMethod.alreadyNarrowedType
+			path: %currentWorkingDirectory%/tests/*
+		-
+			identifier: method.deprecated
+			path: %currentWorkingDirectory%/tests/*
+		# Using this will have a lot of false-positives, as entities are often used as form
+		# entries and there the fields need to be nullable.
+		- identifier: doctrine.columnType
+
+# Disable check, as this is not discoverable
+#rules:
+#	- Janus\Phpstan\Rule\TaskRule

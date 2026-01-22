@@ -17,7 +17,6 @@
 		"symfony/http-kernel": "^7.4 || ^8.0"
 	},
 	"require-dev": {
-		"21torr/janus": "^2.0.2",
 		"bamarni/composer-bin-plugin": "^1.8.2",
 		"roave/security-advisories": "dev-latest"
 	},
@@ -33,7 +32,6 @@
 	},
 	"config": {
 		"allow-plugins": {
-			"21torr/janus": true,
 			"bamarni/composer-bin-plugin": true
 		},
 		"sort-packages": true
