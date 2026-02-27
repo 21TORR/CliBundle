@@ -9,6 +9,7 @@ use Symfony\Component\Console\Helper\TableCell;
 use Symfony\Component\Console\Helper\TableSeparator;
 use Symfony\Component\Console\Helper\TableStyle;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Console\Terminal;
 
 /**
  * 21TORR-branded CLI style
@@ -29,6 +30,24 @@ class TorrStyle extends SymfonyStyle
 		$this->writeln(\sprintf(' <fg=%s>│</>  %s  <fg=red>│</>', self::HIGHLIGHT, $message));
 		$this->writeln(\sprintf(' <fg=%s>╰%s╯</>', self::HIGHLIGHT, str_repeat("─", $length)));
 		$this->newLine();
+	}
+
+	/**
+	 *
+	 */
+	public function headline (string $message) : void
+	{
+		$length = Helper::width(Helper::removeDecoration($this->getFormatter(), $message));
+
+		$this->writeln([
+			"",
+			\sprintf(
+				"<fg=red>────</> %s %s",
+				$message,
+				"<fg=red>" . str_repeat("─", $this->getLineLength() - $length - 6) . "</>",
+			),
+			"",
+		]);
 	}
 
 	/**
@@ -131,5 +150,17 @@ class TorrStyle extends SymfonyStyle
 			"<fg=green>✓</> %s",
 			$message,
 		));
+	}
+
+	/**
+	 * Calculates the line length (= width) of the CLI
+	 */
+	private function getLineLength (
+		int $maxLineLength = 250,
+	) : int
+	{
+		$width = new Terminal()->getWidth() ?: $maxLineLength;
+
+		return min($width - (int) (\DIRECTORY_SEPARATOR === '\\'), $maxLineLength);
 	}
 }

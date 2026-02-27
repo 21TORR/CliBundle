@@ -3,6 +3,7 @@
 
 * (feature) Also provide pre-formatted `createTable()`.
 * (feature) Add styled `info()`.
+* (feature) Add `headline()`.
 
 
 1.2.4
