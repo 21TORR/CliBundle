@@ -9,6 +9,7 @@ use Symfony\Component\Console\Helper\TableCell;
 use Symfony\Component\Console\Helper\TableSeparator;
 use Symfony\Component\Console\Helper\TableStyle;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Console\Terminal;
 
 /**
  * 21TORR-branded CLI style
@@ -18,8 +19,8 @@ class TorrStyle extends SymfonyStyle
 	private const HIGHLIGHT = "red";
 
 	/**
-	 * @inheritDoc
 	 */
+	#[\Override]
 	public function title (string $message) : void
 	{
 		$length = Helper::width(Helper::removeDecoration($this->getFormatter(), $message)) + 4;
@@ -32,8 +33,26 @@ class TorrStyle extends SymfonyStyle
 	}
 
 	/**
-	 * @inheritDoc
+	 *
 	 */
+	public function headline (string $message) : void
+	{
+		$length = Helper::width(Helper::removeDecoration($this->getFormatter(), $message));
+
+		$this->writeln([
+			"",
+			\sprintf(
+				"<fg=red>────</> %s %s",
+				$message,
+				"<fg=red>" . str_repeat("─", $this->getLineLength() - $length - 6) . "</>",
+			),
+			"",
+		]);
+	}
+
+	/**
+	 */
+	#[\Override]
 	public function section (string $message) : void
 	{
 		$length = Helper::width(Helper::removeDecoration($this->getFormatter(), $message));
@@ -47,33 +66,40 @@ class TorrStyle extends SymfonyStyle
 	}
 
 	/**
-	 * @inheritDoc
-	 *
 	 * @param string[]                                         $headers
 	 * @param list<list<scalar|TableCell|null>|TableSeparator> $rows
 	 */
+	#[\Override]
 	public function table (array $headers, array $rows) : void
 	{
+		$this->createTable()
+			->setHeaders($headers)
+			->setRows($rows)
+			->render();
+		$this->newLine();
+	}
+
+	/**
+	 *
+	 */
+	#[\Override]
+	public function createTable () : Table
+	{
+		$table = parent::createTable();
+
 		$style = (new TableStyle())
 			->setHorizontalBorderChars('─')
 			->setVerticalBorderChars('│')
 			->setCrossingChars('┼', '╭', '┬', '╮', '┤', '╯', '┴', '╰', '├');
 		$style->setCellHeaderFormat('<info>%s</>');
 
-		$table = new Table($this);
-		$table->setHeaders($headers);
-		$table->setRows($rows);
-		$table->setStyle($style);
-
-		$table->render();
-		$this->newLine();
+		return $table->setStyle($style);
 	}
 
 	/**
-	 * @inheritDoc
-	 *
 	 * @param string[] $elements
 	 */
+	#[\Override]
 	public function listing (array $elements) : void
 	{
 		$this->newLine();
@@ -87,8 +113,8 @@ class TorrStyle extends SymfonyStyle
 	}
 
 	/**
-	 * @inheritDoc
 	 */
+	#[\Override]
 	public function createProgressBar (
 		int $max = 0,
 		string $format = " %current%/%max% [%bar%] %percent:3s%% %elapsed:6s% %message%",
@@ -101,6 +127,21 @@ class TorrStyle extends SymfonyStyle
 	}
 
 	/**
+	 *
+	 */
+	#[\Override]
+	public function info (array|string $message) : void
+	{
+		$this->block(
+			$message,
+			"INFO",
+			'fg=white;bg=blue',
+			' ',
+			true,
+		);
+	}
+
+	/**
 	 * A smaller way to mark something as done
 	 */
 	public function done (string $message) : void
@@ -109,5 +150,17 @@ class TorrStyle extends SymfonyStyle
 			"<fg=green>✓</> %s",
 			$message,
 		));
+	}
+
+	/**
+	 * Calculates the line length (= width) of the CLI
+	 */
+	private function getLineLength (
+		int $maxLineLength = 250,
+	) : int
+	{
+		$width = new Terminal()->getWidth() ?: $maxLineLength;
+
+		return min($width - (int) (\DIRECTORY_SEPARATOR === '\\'), $maxLineLength);
 	}
 }
