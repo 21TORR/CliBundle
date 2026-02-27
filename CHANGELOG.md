@@ -1,3 +1,10 @@
+1.3.0
+=====
+
+* (feature) Also provide pre-formatted `createTable()`.
+* (feature) Add styled `info()`.
+
+
 1.2.4
 =====
 

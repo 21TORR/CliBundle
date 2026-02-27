@@ -18,8 +18,8 @@ class TorrStyle extends SymfonyStyle
 	private const HIGHLIGHT = "red";
 
 	/**
-	 * @inheritDoc
 	 */
+	#[\Override]
 	public function title (string $message) : void
 	{
 		$length = Helper::width(Helper::removeDecoration($this->getFormatter(), $message)) + 4;
@@ -32,8 +32,8 @@ class TorrStyle extends SymfonyStyle
 	}
 
 	/**
-	 * @inheritDoc
 	 */
+	#[\Override]
 	public function section (string $message) : void
 	{
 		$length = Helper::width(Helper::removeDecoration($this->getFormatter(), $message));
@@ -47,33 +47,40 @@ class TorrStyle extends SymfonyStyle
 	}
 
 	/**
-	 * @inheritDoc
-	 *
 	 * @param string[]                                         $headers
 	 * @param list<list<scalar|TableCell|null>|TableSeparator> $rows
 	 */
+	#[\Override]
 	public function table (array $headers, array $rows) : void
 	{
+		$this->createTable()
+			->setHeaders($headers)
+			->setRows($rows)
+			->render();
+		$this->newLine();
+	}
+
+	/**
+	 *
+	 */
+	#[\Override]
+	public function createTable () : Table
+	{
+		$table = parent::createTable();
+
 		$style = (new TableStyle())
 			->setHorizontalBorderChars('─')
 			->setVerticalBorderChars('│')
 			->setCrossingChars('┼', '╭', '┬', '╮', '┤', '╯', '┴', '╰', '├');
 		$style->setCellHeaderFormat('<info>%s</>');
 
-		$table = new Table($this);
-		$table->setHeaders($headers);
-		$table->setRows($rows);
-		$table->setStyle($style);
-
-		$table->render();
-		$this->newLine();
+		return $table->setStyle($style);
 	}
 
 	/**
-	 * @inheritDoc
-	 *
 	 * @param string[] $elements
 	 */
+	#[\Override]
 	public function listing (array $elements) : void
 	{
 		$this->newLine();
@@ -87,8 +94,8 @@ class TorrStyle extends SymfonyStyle
 	}
 
 	/**
-	 * @inheritDoc
 	 */
+	#[\Override]
 	public function createProgressBar (
 		int $max = 0,
 		string $format = " %current%/%max% [%bar%] %percent:3s%% %elapsed:6s% %message%",
@@ -98,6 +105,21 @@ class TorrStyle extends SymfonyStyle
 		$progressBar->setFormat($format);
 
 		return $progressBar;
+	}
+
+	/**
+	 *
+	 */
+	#[\Override]
+	public function info (array|string $message) : void
+	{
+		$this->block(
+			$message,
+			"INFO",
+			'fg=white;bg=blue',
+			' ',
+			true,
+		);
 	}
 
 	/**
