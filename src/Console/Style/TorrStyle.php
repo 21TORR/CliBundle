@@ -141,7 +141,7 @@ class TorrStyle extends SymfonyStyle
 	#[\Override]
 	public function warning (array|string $message) : void
 	{
-		$this->renderAdmonition($message, "🚨", "black", "yellow");
+		$this->renderAdmonition($message, "🚨", "black", "#FFD700");
 	}
 
 	/**
@@ -150,7 +150,7 @@ class TorrStyle extends SymfonyStyle
 	#[\Override]
 	public function caution (array|string $message) : void
 	{
-		$this->renderAdmonition($message, "🚧", "black", "red");
+		$this->renderAdmonition($message, "🚧", "black", "#FF8700");
 	}
 
 	/**
@@ -168,7 +168,7 @@ class TorrStyle extends SymfonyStyle
 	#[\Override]
 	public function note (array|string $message) : void
 	{
-		$this->renderAdmonition($message, "📝", "black", "cyan");
+		$this->renderAdmonition($message, "📝", "black", "#CCCCCC");
 	}
 
 	/**
@@ -238,14 +238,21 @@ class TorrStyle extends SymfonyStyle
 	}
 
 	/**
-	 * A smaller way to mark something as done
 	 */
-	public function done (string $message) : void
+	#[\Override]
+	public function comment (array|string $message) : void
 	{
-		$this->writeln(\sprintf(
-			"<fg=green>✓</> %s",
-			$message,
-		));
+		$this->block($message, null, null, ' <fg=cyan>//</> ', false, false);
+	}
+
+	/**
+	 * A smaller way to mark something as done
+	 *
+	 * @param string[]|string $message
+	 */
+	public function done (array|string $message = "done") : void
+	{
+		$this->block($message, null, null, ' <fg=green>✓</> ', false, false);
 	}
 
 	/**
