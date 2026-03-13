@@ -1,3 +1,9 @@
+1.4.0
+=====
+
+* (feature) Improve rendering of admonitions.
+
+
 1.3.0
 =====
 
