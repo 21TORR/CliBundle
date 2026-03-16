@@ -1,3 +1,10 @@
+1.4.0
+=====
+
+* (feature) Improve rendering of admonitions.
+* (improvement) Improve styling of `comment()` and `done()`.
+
+
 1.3.0
 =====
 
